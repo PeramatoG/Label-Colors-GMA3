@@ -2,6 +2,8 @@
 
 A grandMA3 Lua plugin that reads **RGB** values from **Color Preset Pool (4)** and assigns the **nearest color name** from a selectable table (full HTML/CSS named colors or a basic set). It then **labels** each preset with that name.
 
+![Example of labeled color presets in Color Preset Pool 4](assets/color_screenshot.png)
+
 > **Tested scope:** This plugin has been **tested only with Universal Color presets** stored as RGB in Pool 4. Other feature modes (CMY/HSV/CT) or non-Universal presets may require adjustments to the extractor.
 
 ## Features
@@ -9,7 +11,7 @@ A grandMA3 Lua plugin that reads **RGB** values from **Color Preset Pool (4)** a
 - Select color table: **HTML colors** (CSS named colors) or **Basic colors**.
 - Finds the **nearest name** using linear sRGB distance.
 - **Auto-labels** each non-empty preset: `Label Preset 4.X "Name"`.
-- Read‑only access to preset content via `GetPresetData` (does not touch the Programmer).
+- Read-only access to preset content via `GetPresetData` (does not touch the Programmer).
 
 ## Requirements
 - grandMA3 console or onPC with Lua and `GetPresetData` available.
@@ -42,6 +44,9 @@ This stores the code inside the showfile; no file paths needed.
 2. In the dialog:
    - Enter **First Preset** and **Last Preset** (e.g., `1` and `50`). Do **not** include `4.`.
    - Choose **Color table**: *HTML colors* or *Basic colors*.
+
+![Label Colors plugin dialog in grandMA3](assets/label_colors.png)
+
 3. Click **Ok**. The plugin will iterate through the range, read RGB, print the nearest name, and label each non-empty preset.
 
 ## How it works (short)
