@@ -140,7 +140,7 @@ local function main()
     }
 
     local resultTable = MessageBox({
-        title = "Name colors",
+        title = "Label colors",
         message = "Select first and last color preset to rename. Don´t use preset prefix (4.).",
         message_align_h = Enums.AlignmentH.Left,
         message_align_v = Enums.AlignmentV.Top,
