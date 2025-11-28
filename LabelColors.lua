@@ -59,11 +59,11 @@ local BASIC_COLORS = {
  {n="White",r=255,g=255,b=255},
  {n="Red",r=255,g=0,b=0},{n="Orange",r=255,g=127,b=0},{n="Yellow",r=255,g=255,b=0},
  {n="Fern Green",r=127,g=255,b=0},{n="Green",r=0,g=255,b=0},{n="Sea Green",r=0,g=255,b=127},
- {n="Cyan",r=0,g=255,b=255},{n="Blue",r=0,g=127,b=255},{n="Dark Blue",r=0,g=0,b=255},
+ {n="Cyan",r=0,g=255,b=255},{n="Lavander",r=0,g=127,b=255},{n="Blue",r=0,g=0,b=255},
  {n="Purple",r=127,g=0,b=255},{n="Magenta",r=255,g=0,b=255},{n="Pink",r=255,g=0,b=127},
  {n="Light Red",r=255,g=127,b=127},{n="Light Orange",r=255,g=191,b=127},{n="Light Yellow",r=255,g=255,b=127},
  {n="Light Fern Green",r=191,g=255,b=127},{n="Light Green",r=127,g=255,b=127},{n="Light Sea Green",r=127,g=255,b=191},
- {n="Light Cyan",r=127,g=255,b=255},{n="Light Blue",r=127,g=191,b=255},{n="Light Dark Blue",r=127,g=127,b=255},
+ {n="Light Cyan",r=127,g=255,b=255},{n="Light Lavander",r=127,g=191,b=255},{n="Light Blue",r=127,g=127,b=255},
  {n="Light Purple",r=191,g=127,b=255},{n="Light Magenta",r=255,g=127,b=255},{n="Light Pink",r=255,g=127,b=191}
 }
 
