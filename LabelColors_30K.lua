@@ -30060,10 +30060,8 @@ local COLORS_30K = {
     {n="Zunda Green", r=107,g=192,b=38},
     {n="Zuni", r=0,g=137,b=150},
     {n="Zürich Blue", r=36,g=139,b=204},
-    {n="Zürich White", r=230,g=225,b=217},
+    {n="Zürich White", r=230,g=225,b=217}
 }
-
-return COLORS_30K
 
 plugin_table.LabelColors_Extended = COLORS_30K
 
