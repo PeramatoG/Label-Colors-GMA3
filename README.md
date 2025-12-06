@@ -9,6 +9,7 @@ A grandMA3 Lua plugin that reads **RGB** values from **Color Preset Pool (4)** a
 ## Features
 - Choose **first** and **last** preset (numbers only, without the `4.` prefix).
 - Select color table: **HTML colors** (CSS named colors) or **Basic colors**.
+- Optional palettes (drop-in files): **ROSCO**, **LEE**, **Extended 20k**, and **Extended 30k** color lists.
 - Finds the **nearest name** using linear sRGB distance.
 - **Auto-labels** each non-empty preset: `Label Preset 4.X "Name"`.
 - Read-only access to preset content via `GetPresetData` (does not touch the Programmer).
@@ -38,6 +39,15 @@ This stores the code inside the showfile; no file paths needed.
 1. Place `LabelColors.lua` in `gma3_library/datapools/plugins/` (internal drive or USB).
 2. In the **Plugin Pool**, **Edit** the plugin and set **FileName** to `LabelColors.lua`.
 3. Use **ReloadAllPlugins** when you update the external file to apply changes.
+
+## Optional color tables
+- `LabelColors_HTML.lua` — CSS/HTML named colors (built in by default).
+- `LabelColors_ROSCO.lua` — Rosco filter list.
+- `LabelColors_LEE.lua` — LEE filter list.
+- `LabelColors_20K.lua` — 20k extended color names derived from the 30k set.
+- `LabelColors_30K.lua` — 30k extended color names (larger, heavier file).
+
+Import any of these files as additional plugin components to expose new palette choices in the **Color table** selector.
 
 ## Usage
 1. Run the **Label Colors** plugin.
