@@ -1,3 +1,8 @@
+local plugin_table = select(3, ...)
+if type(plugin_table) ~= "table" then
+    plugin_table = {}
+end
+
 local ROSCO_COLORS = {
     {n="R00 Clear", r=255,g=255,b=255},
     {n="R01 Light Bastard Amber", r=255,g=96,b=96},
@@ -170,4 +175,6 @@ local ROSCO_COLORS = {
     {n="R3761 Roscolex", r=255,g=96,b=32},
 }
 
-return ROSCO_COLORS
+plugin_table.LabelColors_ROSCO = ROSCO_COLORS
+
+return function() end

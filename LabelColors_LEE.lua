@@ -1,3 +1,8 @@
+local plugin_table = select(3, ...)
+if type(plugin_table) ~= "table" then
+    plugin_table = {}
+end
+
 local LEE_COLORS = {
     {n="L002 Rose Pink", r=217,g=0,b=145},
     {n="L003 Lavender Tint", r=219,g=177,b=255},
@@ -153,4 +158,6 @@ local LEE_COLORS = {
     {n="L444 Eighth C.T. Straw", r=254,g=232,b=186},
 }
 
-return LEE_COLORS
+plugin_table.LabelColors_LEE = LEE_COLORS
+
+return function() end
