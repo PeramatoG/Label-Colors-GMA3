@@ -217,15 +217,12 @@ local function main()
         end
     end
 
-    -- When many palettes are available, fall back to a dropdown list so the buttons don't overflow the dialog width.
-    local selectorType = (#COLOR_MODELS > 3) and 2 or 1
-
     local selectors = {
         {
             name = "Color table",
             selectedValue = defaultIndex,
             values = selectorValues,
-            type = selectorType
+            type = 1
         }
     }
 
