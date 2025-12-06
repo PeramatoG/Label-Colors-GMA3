@@ -222,7 +222,8 @@ local function main()
             name = "Color table",
             selectedValue = defaultIndex,
             values = selectorValues,
-            type = 1
+            -- Use a drop-down selector so long lists don't overflow the dialog buttons
+            type = Enums.SelectorType.List
         }
     }
 
