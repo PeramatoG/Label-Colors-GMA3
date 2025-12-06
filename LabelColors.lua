@@ -70,7 +70,7 @@ local function load_color_models()
     if type(plugin_table.LabelColors_30K) == "table" and #plugin_table.LabelColors_30K > 0 then
         table.insert(COLOR_MODELS, {
             id = "30K",
-            label = "Extended 30K colors",
+            label = "30K colors",
             colors = plugin_table.LabelColors_30K
         })
     end
