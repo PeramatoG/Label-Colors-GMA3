@@ -5,18 +5,12 @@
 -- Plugin paths helper
 ------------------------------------------------------------
 
-local function ensure_plugin_package_path()
-    local pluginsPath = GetPath("plugins")
-    if not pluginsPath or pluginsPath == "" then
-        return
-    end
-
-    if not string.find(package.path, pluginsPath, 1, true) then
-        package.path = package.path .. ";" .. pluginsPath .. "/?.lua"
-    end
+local plugin_table = select(3, ...)
+if type(plugin_table) ~= "table" then
+    plugin_table = {}
 end
 
-ensure_plugin_package_path()
+-- Shared plugin table
 
 ------------------------------------------------------------
 -- Basic color table
@@ -49,21 +43,37 @@ local function load_color_models()
         colors = BASIC_COLORS
     })
 
-    local function add_if_available(id, label, moduleName)
-        local ok, tbl = pcall(require, moduleName)
-        if ok and type(tbl) == "table" and #tbl > 0 then
-            table.insert(COLOR_MODELS, {
-                id = id,
-                label = label,
-                colors = tbl
-            })
-        end
+    if type(plugin_table.LabelColors_HTML) == "table" and #plugin_table.LabelColors_HTML > 0 then
+        table.insert(COLOR_MODELS, {
+            id = "HTML",
+            label = "HTML colors",
+            colors = plugin_table.LabelColors_HTML
+        })
     end
 
-    add_if_available("HTML", "HTML colors", "LabelColors_HTML")
-    add_if_available("ROSCO", "Rosco filters", "LabelColors_ROSCO")
-    add_if_available("LEE", "LEE filters", "LabelColors_LEE")
-    add_if_available("EXT", "Extended 30k colors", "LabelColors_Extended")
+    if type(plugin_table.LabelColors_ROSCO) == "table" and #plugin_table.LabelColors_ROSCO > 0 then
+        table.insert(COLOR_MODELS, {
+            id = "ROSCO",
+            label = "Rosco filters",
+            colors = plugin_table.LabelColors_ROSCO
+        })
+    end
+
+    if type(plugin_table.LabelColors_LEE) == "table" and #plugin_table.LabelColors_LEE > 0 then
+        table.insert(COLOR_MODELS, {
+            id = "LEE",
+            label = "LEE filters",
+            colors = plugin_table.LabelColors_LEE
+        })
+    end
+
+    if type(plugin_table.LabelColors_Extended) == "table" and #plugin_table.LabelColors_Extended > 0 then
+        table.insert(COLOR_MODELS, {
+            id = "EXT",
+            label = "Extended 30k colors",
+            colors = plugin_table.LabelColors_Extended
+        })
+    end
 end
 
 ------------------------------------------------------------

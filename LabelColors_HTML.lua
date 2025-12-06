@@ -1,3 +1,8 @@
+local plugin_table = select(3, ...)
+if type(plugin_table) ~= "table" then
+    plugin_table = {}
+end
+
 local HTML_COLORS = {
  {n="AliceBlue",r=240,g=248,b=255},{n="AntiqueWhite",r=250,g=235,b=215},
  {n="Aquamarine",r=127,g=255,b=212},{n="Azure",r=240,g=255,b=255},{n="Beige",r=245,g=245,b=220},
@@ -51,4 +56,6 @@ local HTML_COLORS = {
  {n="YellowGreen",r=154,g=205,b=50}
 }
 
-return HTML_COLORS
+plugin_table.LabelColors_HTML = HTML_COLORS
+
+return function() end
