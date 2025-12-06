@@ -44,7 +44,7 @@ This stores the code inside the showfile; no file paths needed.
 - `LabelColors_HTML.lua` — CSS/HTML named colors (built in by default).
 - `LabelColors_ROSCO.lua` — Rosco filter list.
 - `LabelColors_LEE.lua` — LEE filter list.
-- `LabelColors_30K.lua` — 30k extended color names (larger, heavier file).
+- `LabelColors_30K.lua` — 30k extended color names (larger, heavier file; **naming presets with this option takes a bit longer**).
 
 Import any of these files as additional plugin components to expose new palette choices in the **Color table** selector.
 
