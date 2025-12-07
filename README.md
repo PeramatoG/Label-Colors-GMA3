@@ -2,7 +2,10 @@
 
 Label Colors is a grandMA3 Lua plugin that reads RGB values from Color Preset Pool (4), finds the nearest color name from a selectable table (HTML, Basic, filters or extended lists) and labels each preset with that name.
 
-> **Tested scope:** the plugin has been tested with Universal Color presets stored as RGB in Pool 4. Other color modes (CMY/HSV/CT) or non‑Universal presets may need adjustments to the extractor.
+![Label Colors plugin dialog](assets/label_colors.png)  
+*Label Colors plugin dialog with range and color table options.*
+
+> **Tested scope:** the plugin has been tested with Universal Color presets stored as RGB in Pool 4. Other color modes (CMY/HSV/CT) or non-Universal presets may need adjustments to the extractor.
 
 ## Features
 
@@ -11,9 +14,9 @@ Label Colors is a grandMA3 Lua plugin that reads RGB values from Color Preset Po
   - HTML colors (CSS named colors).
   - Basic color set (compact palette).
   - Optional Rosco and LEE filter lists.
-  - Optional extended **30k** color list for very fine‑grained naming.
-- Finds the nearest color name using a squared‑distance metric in **linear sRGB**.
-- Auto‑labels each non‑empty preset with the chosen name: `Label Preset 4.X "Name"`.
+  - Optional extended **30k** color list for very fine-grained naming.
+- Finds the nearest color name using a squared-distance metric in **linear sRGB**.
+- Auto-labels each non-empty preset with the chosen name: `Label Preset 4.X "Name"`.
 - Reads preset content via `GetPresetData` only (does not touch the Programmer).
 
 ## Requirements
@@ -56,7 +59,7 @@ You can either embed the plugin code into the showfile or reference external `.l
 
 The repository includes several optional tables that can be added as extra components in the plugin:
 
-- `LabelColors_HTML.lua` – CSS/HTML named colors table (also used as the default named‑color set).
+- `LabelColors_HTML.lua` – CSS/HTML named colors table (also used as the default named-color set).
 - `LabelColors_ROSCO.lua` – Rosco filter list.
 - `LabelColors_LEE.lua` – LEE filter list.
 - `LabelColors_30K.lua` – extended list with around **30,000** color names.
@@ -72,11 +75,15 @@ Import any of these as separate Lua components in the same plugin to expose new 
    - Enter **First Preset** and **Last Preset** (examples: `1` and `50`). Do **not** include the `4.` prefix.
    - Choose the **Color table** (HTML, Basic, ROSCO, LEE, or 30k, depending on what you have installed).
 3. Confirm with **Ok**.
+
+![Color presets labeled by the plugin](assets/color_screenshot.png)  
+*Example of Color Preset Pool 4 with presets automatically labeled by the plugin.*
+
 4. The plugin:
    - Iterates through the requested preset range in Pool 4.
    - Reads RGB values via `GetPresetData`.
    - Computes the nearest color name in the selected table.
-   - Prints the match in the System Monitor and renames each non‑empty preset.
+   - Prints the match in the System Monitor and renames each non-empty preset.
 
 If a preset is empty or does not contain valid RGB data, the plugin prints a message and skips it.
 
@@ -91,7 +98,7 @@ If a preset is empty or does not contain valid RGB data, the plugin prints a mes
 ## Notes & limitations
 
 - Designed and tested for **Universal Color** presets in Pool 4, stored as RGB.
-- Other color modes (CMY/HSV/CT) or non‑Universal presets may require extending the extractor.
+- Other color modes (CMY/HSV/CT) or non-Universal presets may require extending the extractor.
 - Named colors (HTML, Basic, filters and 30k list) are descriptive and may not match the naming conventions of your show.
 - When using the 30k table, expect longer processing times on large preset ranges.
 
