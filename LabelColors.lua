@@ -300,7 +300,7 @@ local function main()
         message = "Select first and last color preset to rename. Don´t use preset prefix (4.).",
         message_align_h = Enums.AlignmentH.Left,
         message_align_v = Enums.AlignmentV.Top,
-        commands = {value = 0, name = "Cancel"}, {value = 1, name = "Ok"}
+        commands = {{value = 1, name = "Ok"}, {value = 0, name = "Cancel"}},
         inputs = inputs,
         selectors = selectors,
         backColor = "Global.Default",
