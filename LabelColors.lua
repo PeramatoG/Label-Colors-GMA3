@@ -100,12 +100,63 @@ local function norm255_from100(x)
     return math.floor((x or 0) * 2.55 + 0.5)
 end
 
-local function srgb_to_linear(c)
-    if c <= 0.04045 then
-        return c / 12.92
-    else
-        return ((c + 0.055) / 1.055) ^ 2.4
+-- Convert RGB (0..255) to HSV with H,S,V in [0,1]
+local function rgb_to_hsv(r255, g255, b255)
+    local r = math.max(0, math.min(255, r255)) / 255
+    local g = math.max(0, math.min(255, g255)) / 255
+    local b = math.max(0, math.min(255, b255)) / 255
+
+    local maxc = math.max(r, g, b)
+    local minc = math.min(r, g, b)
+    local delta = maxc - minc
+
+    local h = 0.0
+    if delta > 0 then
+        if maxc == r then
+            h = ( (g - b) / delta )
+            if h < 0 then
+                h = h + 6
+            end
+        elseif maxc == g then
+            h = ( (b - r) / delta ) + 2
+        else
+            h = ( (r - g) / delta ) + 4
+        end
+        h = h / 6.0
+        if h < 0 then
+            h = h + 1.0
+        elseif h >= 1.0 then
+            h = h - 1.0
+        end
     end
+
+    local s = 0.0
+    if maxc > 0 then
+        s = delta / maxc
+    end
+
+    local v = maxc
+
+    return h, s, v
+end
+
+-- Squared distance in HSV space with weights for H, S and V
+local function hsv_distance2(h1, s1, v1, h2, s2, v2)
+    -- Hue is circular: use shortest angular distance (in [0,0.5])
+    local dh = math.abs(h1 - h2)
+    if dh > 0.5 then
+        dh = 1.0 - dh
+    end
+
+    local ds = s1 - s2
+    local dv = v1 - v2
+
+    -- Weights: hue is most important, then saturation, then value
+    local wH = 3.0
+    local wS = 1.0
+    local wV = 0.5
+
+    return wH * dh * dh + wS * ds * ds + wV * dv * dv
 end
 
 local function nearest_name_from_table(tbl, r255, g255, b255)
@@ -113,24 +164,26 @@ local function nearest_name_from_table(tbl, r255, g255, b255)
         return "Unnamed"
     end
 
-    -- Clamp input just in case
-    local rl = srgb_to_linear(math.max(0, math.min(255, r255)) / 255)
-    local gl = srgb_to_linear(math.max(0, math.min(255, g255)) / 255)
-    local bl = srgb_to_linear(math.max(0, math.min(255, b255)) / 255)
+    -- Convert input color to HSV
+    local h0, s0, v0 = rgb_to_hsv(r255, g255, b255)
 
     local best_name = tbl[1].n or "Unnamed"
     local best_d = nil
 
     for i = 1, #tbl do
         local c = tbl[i]
-        local cr = srgb_to_linear((c.r or 0) / 255)
-        local cg = srgb_to_linear((c.g or 0) / 255)
-        local cb = srgb_to_linear((c.b or 0) / 255)
 
-        local dr = rl - cr
-        local dg = gl - cg
-        local db = bl - cb
-        local d  = dr * dr + dg * dg + db * db  -- symmetric distance
+        -- Precompute and cache HSV for table colors if not present
+        local ch = c.h
+        local cs = c.s
+        local cv = c.v
+
+        if ch == nil or cs == nil or cv == nil then
+            ch, cs, cv = rgb_to_hsv(c.r or 0, c.g or 0, c.b or 0)
+            c.h, c.s, c.v = ch, cs, cv
+        end
+
+        local d = hsv_distance2(h0, s0, v0, ch, cs, cv)
 
         if not best_d or d < best_d then
             best_d = d
@@ -146,11 +199,11 @@ local function extract_rgb_table(t, path, rgb)
     if type(t) ~= "table" then return end
     path = path or ""
     rgb = rgb or {r=nil,g=nil,b=nil}
-    for k,v in pairs(t) do
-        local kp = (path=="" and tostring(k)) or (path.."/"..tostring(k))
-        if type(v)=="table" then
+    for k, v in pairs(t) do
+        local kp = (path == "" and tostring(k)) or (path .. "/" .. tostring(k))
+        if type(v) == "table" then
             extract_rgb_table(v, kp, rgb)
-        elseif k=="absolute" and type(v)=="number" then
+        elseif k == "absolute" and type(v) == "number" then
             local lkp = kp:lower()
             if lkp:find("/colorrgb_r/") then rgb.r = v end
             if lkp:find("/colorrgb_g/") then rgb.g = v end
@@ -186,13 +239,13 @@ end
 local function process_preset(idx, table_choice)
     local h = DataPool().PresetPools[4][idx]
     if not h then
-        Printf("Preset 4."..tostring(idx)..": empty.")
+        Printf("Preset 4." .. tostring(idx) .. ": empty.")
         return
     end
 
     local ok, content = pcall(function() return GetPresetData(h) end)
     if not ok or type(content) ~= "table" then
-        Printf("Preset 4."..tostring(idx)..": GetPresetData failed.")
+        Printf("Preset 4." .. tostring(idx) .. ": GetPresetData failed.")
         return
     end
 
@@ -204,10 +257,10 @@ local function process_preset(idx, table_choice)
 
         local name = name_for_rgb(table_choice, r, g, b)
 
-        Printf("Preset 4."..tostring(idx).." => RGB("..r..","..g..","..b..") ≈ "..name)
-        Cmd('Label Preset 4.'..tostring(idx)..' "'..name..'"')
+        Printf("Preset 4." .. tostring(idx) .. " => RGB(" .. r .. "," .. g .. "," .. b .. ") ≈ " .. name)
+        Cmd('Label Preset 4.' .. tostring(idx) .. ' "' .. name .. '"')
     else
-        Printf("Preset 4."..tostring(idx)..": RGB not found.")
+        Printf("Preset 4." .. tostring(idx) .. ": RGB not found.")
     end
 end
 
@@ -238,7 +291,6 @@ local function main()
             name = "Color table",
             selectedValue = defaultIndex,
             values = selectorValues,
-
             type = 1
         }
     }
@@ -248,12 +300,12 @@ local function main()
         message = "Select first and last color preset to rename. Don´t use preset prefix (4.).",
         message_align_h = Enums.AlignmentH.Left,
         message_align_v = Enums.AlignmentV.Top,
-        commands = {{value = 1, name = "Ok"}, {value = 0, name = "Cancel"}},
+        commands = {value = 0, name = "Cancel"}, {{value = 1, name = "Ok"}},
         inputs = inputs,
         selectors = selectors,
         backColor = "Global.Default",
         icon = "logo_small",
-			messageTextColor = "Global.Text",
+        messageTextColor = "Global.Text",
         autoCloseOnInput = true
     })
 
