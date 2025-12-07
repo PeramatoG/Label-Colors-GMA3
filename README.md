@@ -1,6 +1,7 @@
 # Label Colors for grandMA3
 
-Label Colors is a grandMA3 Lua plugin that reads RGB values from Color Preset Pool (4), finds the nearest color name from a selectable table (HTML, Basic, filters or extended lists) and labels each preset with that name.
+Label Colors is a grandMA3 Lua plugin that reads RGB values from Color Preset Pool (4), finds the nearest color name from a selectable table (HTML, Basic, filters or extended lists) and labels each preset with that name.  
+From v2.0.0 onwards, the nearest-color calculation runs in **HSV space** (Hue/Saturation/Value) for more perceptual and saturation-aware matching.
 
 ![Label Colors plugin dialog](assets/label_colors.png)  
 *Label Colors plugin dialog with range and color table options.*
@@ -15,7 +16,7 @@ Label Colors is a grandMA3 Lua plugin that reads RGB values from Color Preset Po
   - Basic color set (compact palette).
   - Optional Rosco and LEE filter lists.
   - Optional extended **30k** color list for very fine-grained naming.
-- Finds the nearest color name using a squared-distance metric in **linear sRGB**.
+- Finds the nearest color name using a weighted squared-distance metric in **HSV space** (Hue/Saturation/Value), giving more intuitive results when changing hue or saturation.
 - Auto-labels each non-empty preset with the chosen name: `Label Preset 4.X "Name"`.
 - Reads preset content via `GetPresetData` only (does not touch the Programmer).
 
@@ -82,8 +83,8 @@ Import any of these as separate Lua components in the same plugin to expose new 
 4. The plugin:
    - Iterates through the requested preset range in Pool 4.
    - Reads RGB values via `GetPresetData`.
-   - Computes the nearest color name in the selected table.
-   - Prints the match in the System Monitor and renames each non-empty preset.
+   - Converts RGB values to HSV and computes a weighted squared distance in HSV space to each entry in the selected color table.
+   - Picks the name with the smallest distance and applies `Label Preset 4.X "Name"`.
 
 If a preset is empty or does not contain valid RGB data, the plugin prints a message and skips it.
 
@@ -92,13 +93,14 @@ If a preset is empty or does not contain valid RGB data, the plugin prints a mes
 - Retrieves each preset handle from `DataPool().PresetPools[4][i]`.
 - Calls `GetPresetData(handle)` to obtain a nested Lua table with feature data.
 - Locates `ColorRGB_R`, `ColorRGB_G`, `ColorRGB_B` `absolute` values (0..100), converts them to 0..255.
-- Converts RGB values to linear sRGB and computes squared distance to each entry in the selected color table.
-- Picks the name with the smallest distance and applies `Label Preset 4.X "Name"`.
+- Converts RGB to HSV (Hue/Saturation/Value) and compares against the selected table using a weighted HSV distance, which gives more perceptual results than simple RGB distance (especially when rotating hue at high saturation).
+- Uses the best match to run `Label Preset 4.X "Name"`.
 
 ## Notes & limitations
 
 - Designed and tested for **Universal Color** presets in Pool 4, stored as RGB.
 - Other color modes (CMY/HSV/CT) or non-Universal presets may require extending the extractor.
+- The HSV-based matching is computed from the extracted RGB values; if the RGB data is not representative of the actual fixture color, the suggested name may differ from your visual impression.
 - Named colors (HTML, Basic, filters and 30k list) are descriptive and may not match the naming conventions of your show.
 - When using the 30k table, expect longer processing times on large preset ranges.
 
@@ -109,12 +111,14 @@ If a preset is empty or does not contain valid RGB data, the plugin prints a mes
 - Add a mode switch (e.g. via a selector) to choose between:
   - Only printing matches.
   - Printing and renaming presets.
+- Experiment with different weights for Hue, Saturation and Value in the HSV distance to match your visual preferences.
 
 ## Versioning
 
 - **2.0.0**
   - Optional ROSCO, LEE and extended 30k tables as separate components.
   - Updated documentation and installation options.
+  - Switched nearest-color metric from linear sRGB to an HSV-based distance for more perceptual, saturation-aware naming.
   - Performance notes and warnings for the 30k palette.
 - **1.0.0**
   - Initial public release of Label Colors for grandMA3.
